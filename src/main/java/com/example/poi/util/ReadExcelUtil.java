@@ -25,6 +25,7 @@ public class ReadExcelUtil {
         try {
             wb = WorkbookFactory.create(new File(path));
             for (int i = 0; i < wb.getNumberOfSheets(); i++) {
+                System.out.println(path);
                 map.put("sheet"+i,(readExcel(wb, i, 0, 0)));
             }
         } catch (InvalidFormatException e) {
@@ -42,7 +43,7 @@ public class ReadExcelUtil {
      * @param startReadLine 开始读取的行:从0开始
      * @param tailLine 去除最后读取的行
      */
-    private Map<String, Map> readExcel(Workbook wb, int sheetIndex, int startReadLine, int tailLine) throws JSONException {
+    private Map<String, Map> readExcel(Workbook wb, int sheetIndex, int startReadLine, int tailLine) {
         Sheet sheet = wb.getSheetAt(sheetIndex);
         Map<String, String> informationName = new HashMap<>();
         Map<String, String> informationMap = new HashMap<>();
@@ -54,57 +55,71 @@ public class ReadExcelUtil {
         int a2 = 0;
         int a3 = 0;
         for(int i=startReadLine; i<sheet.getLastRowNum()-tailLine+1; i++) {
-            Row row = sheet.getRow(i);
-            List<String> list = new ArrayList<>();
-            String string = null;
-            for(Cell c : row) {
-                boolean isMerge = isMergedRegion(sheet, i, c.getColumnIndex());
-                //判断是否具有合并单元格
-                if(isMerge) {
-                    String str1 = getMergedRegionValue(sheet, row.getRowNum(), c.getColumnIndex());
-                    if (string!=null && string.equals(str1)) {
-
-                    } else {
-                        string = str1;
-                        list.add(string);
-                    }
-                }else {
-                    String str2 = String.valueOf(c.getRichStringCellValue());
-                    list.add(str2);
+            if (sheet != null){
+                Row row = sheet.getRow(i);
+                List<String> list = new ArrayList<>();
+                String string = null;
+                if (row == null) {
+                    break;
                 }
-            }
-            if (i==0) {
-                informationName.put("information",string);
-            }
-            if ( i<21 && i>1 ){
-                if (list.size()==4) {
-                    informationMap.put(list.get(0),list.get(1));
-                    informationMap.put(list.get(2),list.get(3));
-                } else if (list.size()==3) {
+                for(Cell c : row) {
+                    boolean isMerge = isMergedRegion(sheet, i, c.getColumnIndex());
+                    //判断是否具有合并单元格
+                    if(isMerge) {
+                        String str1 = getMergedRegionValue(sheet, row.getRowNum(), c.getColumnIndex());
+                        if (string!=null && string.equals(str1)) {
+
+                        } else {
+                            string = str1;
+                            list.add(string);
+                        }
+//                    if (str1.equals("")) {
+//                        string = str1;
+//                        list.add(string);
+//                    } else if (string!=null && !string.equals(str1)) {
+//                        string = str1;
+//                        list.add(string);
+//                    }
+                    }else {
+                        String str2 = String.valueOf(c.getRichStringCellValue());
+                        list.add(str2);
+                    }
+                }
+                if (i==0) {
+                    informationName.put("information",string);
+                }
+                if ( i<21 && i>1 ){
+                    if (list.size()==4) {
+                        informationMap.put(list.get(0),list.get(1));
+                        informationMap.put(list.get(2),list.get(3));
+                    } else if (list.size()==3) {
                         informationMap.put(list.get(0),list.get(1));
                         informationMap.put(list.get(2),"");
+                    }
+
+                }
+                if (i > 21 && i < 28) {
+                    if (list.size()==2) {
+                        informationMap.put(list.get(0),list.get(1));
+                    } else if (list.size()==1) {
+                        informationMap.put(list.get(0),"");
+                    }
                 }
 
-            }
-            if (i > 21 && i < 28) {
-                if (list.size()==2) {
-                    informationMap.put(list.get(0),list.get(1));
-                } else if (list.size()==1) {
-                    informationMap.put(list.get(0),"");
+                if (list.get(0).contains("申请材料") ) {
+                    materialsMap.put("申请材料"+a1,list);
+                    a1++;
+                }
+                if (list.get(0).contains("办理流程") ) {
+                    processMap.put("办理流程"+a2,list);
+                    a2++;
+                }
+                if (list.get(0).contains("常见问题") ) {
+                    problemMap.put("常见问题"+a3,list);
+                    a3++;
                 }
             }
-            if (list.get(0).equals("申请材料") || string.equals("申请材料")) {
-                materialsMap.put("申请材料"+a1,list);
-                a1++;
-            }
-            if (list.get(0).equals("办理流程")|| string.equals("办理流程")) {
-                processMap.put("办理流程"+a2,list);
-                a2++;
-            }
-            if (list.get(0).equals("常见问题")|| string.equals("常见问题")) {
-                problemMap.put("常见问题"+a3,list);
-                a3++;
-            }
+
         }
         map.put("表名",informationName);
         map.put("基本信息",informationMap);
@@ -120,7 +135,7 @@ public class ReadExcelUtil {
      * @param column
      * @return
      */
-    public  String getMergedRegionValue(Sheet sheet ,int row , int column){
+    public static String getMergedRegionValue(Sheet sheet, int row, int column){
         int sheetMergeCount = sheet.getNumMergedRegions();
 
         for(int i = 0 ; i < sheetMergeCount ; i++){
@@ -172,7 +187,7 @@ public class ReadExcelUtil {
      * @param column 列下标
      * @return
      */
-    private boolean isMergedRegion(Sheet sheet,int row ,int column) {
+    public static boolean isMergedRegion(Sheet sheet, int row, int column) {
         int sheetMergeCount = sheet.getNumMergedRegions();
         for (int i = 0; i < sheetMergeCount; i++) {
             CellRangeAddress range = sheet.getMergedRegion(i);
@@ -214,7 +229,7 @@ public class ReadExcelUtil {
      * @param cell
      * @return
      */
-    public String getCellValue(Cell cell){
+    public static String getCellValue(Cell cell){
 
         if(cell == null) {
             return "";
@@ -230,7 +245,7 @@ public class ReadExcelUtil {
 
         }else if(cell.getCellType() == Cell.CELL_TYPE_FORMULA){
 
-            return cell.getCellFormula() ;
+            return String.valueOf(cell.getCellFormula()) ;
 
         }else if(cell.getCellType() == Cell.CELL_TYPE_NUMERIC){
 

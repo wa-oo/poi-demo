@@ -5,10 +5,11 @@ public class Common {
     public static final String DRIVER = "com.mysql.cj.jdbc.Driver";
     public static final String DB_NAME = "plan";
     public static final String USERNAME = "root";
-    public static final String PASSWORD = "1QAZxcde32@";
-    public static final String IP = "10.0.18.111";
+    public static final String PASSWORD = "root";
+    public static final String IP = "localhost";
     public static final String PORT = "3306";
-    public static final String URL = "jdbc:mysql://" + IP + ":" + PORT + "/" + DB_NAME+"?useUnicode=true&characterEncoding=utf-8&useSSL=false";
+//    public static final String URL = "jdbc:mysql://" + IP + ":" + PORT + "/" + DB_NAME+"?useUnicode=true&characterEncoding=utf-8&useSSL=false";
+    public static final String URL = "jdbc:mysql://" + IP + ":" + PORT + "/" + DB_NAME+"?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=GMT%2B8";
 
     // sql
     public static final String INSERT_Application_SQL = "INSERT INTO application_materials( information_id, material_name, material_level, material_properties, material_source, material_preparation, legal_basis, review_criteria, empty_table, sample_table) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";

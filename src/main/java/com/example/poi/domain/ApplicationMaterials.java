@@ -3,7 +3,10 @@ package com.example.poi.domain;
 public class ApplicationMaterials {
     private Integer id;
     private Integer informationId;
-    private String materialName;//材料名称
+    /**
+     * 材料名称
+     */
+    private String materialName;
     private String materialLevel;//材料位阶
     private String materialProperties;//材料属性
     private String materialSource;//材料来源
@@ -11,7 +14,7 @@ public class ApplicationMaterials {
     private String legalBasis;//法定依据
     private String reviewCriteria;//审查标准
     private String emptyTable;//空表
-    private String sampleTable;///样表
+    private String sampleTable;//样表
 
     public Integer getId() {
         return id;
