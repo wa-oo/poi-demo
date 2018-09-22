@@ -17,5 +17,21 @@ public class Common {
     public static final String INSERT_Information_SQL = "INSERT INTO information_sheet( table_name, item_name, basic_coding, child_name, type_name, approval_category, service_object, administrative_examination, exercise_level, handling_type, business_department, implementation_department, implementation_coding, complaint_call, location, support_hotline, general_scope, statutory_time, commitment_time, validity_period, scope, dispatch, intermediary_service, field_connector, site_access_path, online_connection, online_access_path, logistics_express, express_form, support_reservation, appointment_route, quantitative_restrictions, quantitative_number, joint_office, joint_department, operating_system, system_name, processing_results, result_sample, setting_basis, charge, charges, charge_basis, application_conditions, authority_division) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     public static final String INSERT_Process_SQL = "INSERT INTO processing_process(information_id, link, step, handler, time_limit, review_criteria, basis, processing_results) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?)";
     public static final String SELECT_InformationId_SQL = "select max(id) from information_sheet";
+    public static final String Select_Code_SQL = "SELECT `code` FROM coding WHERE shixiang = ? AND zishixiang = ?";
+    public static final String INSERT_Conding_SQL = "insert into coding(code,shixiang,zishixiang,bumen,qu) values (?,?,?,?,?)";
+    public static final String Select_Sheet_AQL = "select * from information_sheet";
+    public static final String Select_Code_Sheet_SQL = "SELECT id,item_name FROM information_sheet";
+    public static final String update_Code_Sheet_SQL = "update information_sheet set basic_coding = ? where id = ?";
 
+    public static String getCodeSQL(String s1,String s2){
+        String Select_Code_SQL = "SELECT `code` FROM coding WHERE shixiang = '"+s1+"' and zishixiang = '"+s2+"'";
+        System.out.println(Select_Code_SQL);
+        return Select_Code_SQL;
+    }
+
+    public static String getCodeSQLOne(String s1){
+        String Select_Code_SQL = "SELECT `code` FROM coding WHERE shixiang = '"+s1+"'";
+        System.out.println(Select_Code_SQL);
+        return Select_Code_SQL;
+    }
 }

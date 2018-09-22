@@ -9,6 +9,7 @@ import com.example.poi.util.DBUtil;
 import com.example.poi.util.FileListUtil;
 import com.example.poi.util.ReadExcelUtil;
 
+import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
@@ -16,7 +17,7 @@ import java.util.Map;
 
 public class ExcelController {
 
-    public static boolean readExcels(String filePath) throws SQLException {
+    public static boolean readExcels(String filePath,PrintWriter pw1) {
         Map<String, Map> map = new HashMap<>();
         Map<String, String> informationName = new HashMap<>();
         Map<String, String> informationMap = new HashMap<>();
@@ -33,39 +34,63 @@ public class ExcelController {
             for (int i = 0; i < map.size(); i++) {
                 informationName = (Map<String, String>) map.get("sheet" + i).get("表名");
                 informationMap = (Map<String, String>) map.get("sheet" + i).get("基本信息");
-                String path = "D:\\attachment\\区县公共服务办事指南\\";
-                informationSheet.setTableName(informationName.get("information"));
-                //基本信息
-                String str = filePath.substring(path.length(),filePath.length()).replaceAll(".xlsx","");
-                informationSheet.setItemName(str+"\\"+informationMap.get("事项名称"));
-                informationSheet.setBasicCoding("");
-                if (informationMap.get("基本编码") == null) {
+//                String path = "D:\\attachment\\区县公共服务办事指南\\";
 
+                String path = null;
+                if (filePath.contains("西青区")){
+                    path = "西青区";
+                } else if (filePath.contains("东丽区")) {
+                    path = "东丽区";
+                } else if (filePath.contains("北辰区")) {
+                    path = "北辰区";
+                } else if (filePath.contains("宝坻区")) {
+                    path = "宝坻区";
+                } else if (filePath.contains("津南区")) {
+                    path = "津南区";
+                } else if (filePath.contains("静海区")) {
+                    path = "静海区";
+                } else if (filePath.contains("宁河区")) {
+                    path = "宁河区";
+                } else if (filePath.contains("蓟州区")) {
+                    path = "蓟州区";
+                } else if (filePath.contains("河北区")) {
+                    path = "河北区";
+                } else if (filePath.contains("南开区")) {
+                    path = "南开区";
+                } else if (filePath.contains("河西区")) {
+                    path = "河西区";
+                } else if (filePath.contains("红桥区")) {
+                    path = "红桥区";
+                }else if (filePath.contains("滨海新区")) {
+                    path = "滨海新区";
+                }else if (filePath.contains("和平区")) {
+                    path = "和平区";
+                }else if (filePath.contains("河东区")) {
+                    path = "河东区";
+                }else if (filePath.contains("武清区")) {
+                    path = "武清区";
                 }
+
+                informationSheet.setTableName(filePath);
+                //基本信息
+//                String str1 = filePath.substring(path.length(),filePath.length()).replaceAll(".xlsx","");
+//                String str2 = str1.replaceAll(".xls","");
+                informationSheet.setItemName(informationMap.get("事项名称"));
+                informationSheet.setChildName(informationMap.get("子项名称"));
+
+                if (informationMap.get("事项名称").equals("事项具体名称")){
+                    break;
+                }
+
+                informationSheet.setBasicCoding("");
                 if (informationMap.get("基本编码").contains("10 00001 001")) {
                     break;
                 }
-//            if (informationMap.get("基本编码").equals("")) {
-//                b = false;
-//            }
-//            if (informationMap.get("基本编码").contains("按照108号文件规定编码")) {
-//                b = false;
-//            }
-//            if (informationMap.get("基本编码").contains("先不填")) {
-//                b = false;
-//            }
-//            if (b == false) {
-//                String path = "D:\\attachment\\区县公共服务办事指南\\";
-//                System.out.println(filePath.substring(path.length(),filePath.length()));
-//                try {
-//                    fileListUtil.OutWrite(filePath);
-//                } catch (FileNotFoundException e) {
-//                    e.printStackTrace();
-//                }
-//
-//            }
+                if (informationMap.get("基本编码") != null) {
 
-                informationSheet.setChildName(informationMap.get("子项名称"));
+                }
+                String code = null;
+                informationSheet.setBasicCoding(code);
                 informationSheet.setTypeName(informationMap.get("类型名称"));
                 informationSheet.setApprovalCategory(informationMap.get("审批类别"));
                 informationSheet.setServiceObject(informationMap.get("服务对象"));
@@ -110,8 +135,13 @@ public class ExcelController {
                 informationSheet.setAuthorityDivision(informationMap.get("权限划分"));
                 int id = 0;
                 if (b) {
-                    DBUtil.insertInformationSheet(Common.INSERT_Information_SQL, informationSheet);
-                    id = DBUtil.selectId(Common.SELECT_InformationId_SQL);
+                    try {
+                        DBUtil.insertInformationSheet(Common.INSERT_Information_SQL, informationSheet);
+                        id = DBUtil.selectId(Common.SELECT_InformationId_SQL);
+                    } catch (SQLException e) {
+                        pw1.println(filePath);
+                        e.printStackTrace();
+                    }
                 }
                 materialsMap = (Map<String, List<String>>) map.get("sheet" + i).get("申请材料");
                 for (int i1 = 1; i1 < materialsMap.size(); i1++) {
@@ -130,7 +160,12 @@ public class ExcelController {
                         applicationMaterials.setEmptyTable(list.get(8));
                         applicationMaterials.setSampleTable(list.get(9));
                         if (b) {
-                            DBUtil.insertApplicationMaterials(Common.INSERT_Application_SQL, applicationMaterials);
+                            try {
+                                DBUtil.insertApplicationMaterials(Common.INSERT_Application_SQL, applicationMaterials);
+                            } catch (SQLException e) {
+                                pw1.println(filePath);
+                                e.printStackTrace();
+                            }
                         }
                     }
                 }
@@ -145,7 +180,12 @@ public class ExcelController {
                         commonProblem.setAnswer(list.get(2));
                         if (list.get(1).length() > 3) {
                             if (b) {
-                                DBUtil.insertCommonProblem(Common.INSERT_Problem_SQL, commonProblem);
+                                try {
+                                    DBUtil.insertCommonProblem(Common.INSERT_Problem_SQL, commonProblem);
+                                } catch (SQLException e) {
+                                    pw1.println(filePath);
+                                    e.printStackTrace();
+                                }
                             }
                         }
                     }
@@ -165,7 +205,12 @@ public class ExcelController {
                         processingProcess.setBasis(list.get(6));
                         processingProcess.setProcessingResults(list.get(7));
                         if (b) {
-                            DBUtil.insertProcessingProcess(Common.INSERT_Process_SQL, processingProcess);
+                            try {
+                                DBUtil.insertProcessingProcess(Common.INSERT_Process_SQL, processingProcess);
+                            } catch (SQLException e) {
+                                pw1.println(filePath);
+                                e.printStackTrace();
+                            }
                         }
                     }
                 }
@@ -174,6 +219,8 @@ public class ExcelController {
         return b;
 
     }
+
+
 
     private boolean isNotNull(List<String> list) {
         boolean b = false;

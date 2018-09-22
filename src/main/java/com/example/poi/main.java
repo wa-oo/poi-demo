@@ -1,59 +1,45 @@
 package com.example.poi;
 
-import com.example.poi.controller.CodingController;
-import com.example.poi.util.FileListUtil;
-
+import java.io.*;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 
 public class main {
-    public static void main(String[] args) throws SQLException {
+    public static void main(String[] args) throws SQLException, FileNotFoundException, UnsupportedEncodingException {
 
-        //D盘下的file文件夹的目录
-        String filepath = null;
-//        //File类型可以是文件也可以是文件夹
-//        File file = new File(filepath);
-//        //将该目录下的所有文件放置在一个File类型的数组中
-//        File[] fileList = file.listFiles();
-        List<String> list = new ArrayList<>();
-
-        FileListUtil fileListUtil = new FileListUtil();
-
-        CodingController codingController = new CodingController();
-        codingController.readExcelToObj("D:\\王涛\\天津一网通办\\公共服务事项编码。\\市内六区\\河北部门.xlsx");
-
-        try {
-            fileListUtil.FileList("D:\\attachment\\区县公共服务办事指南\\河北区","D:\\log.txt");
-            list = fileListUtil.getList();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-
-        //新建一个文件夹集合
-//        List<File> wjjList = new ArrayList<File>();
-//        for (int i = 0; i < fileList.length; i++) {
-//            //判断是否为文件夹
-//            if (fileList[i].isDirectory()) {
-//                wjjList .add(fileList[i]);
-//                file = new File(String.valueOf(wjjList.get(i)));
-//            }
+        //D盘下的file文件夹的目录里的基本编码文件
+//        List<String> list = new ArrayList<>();
+//        FileListUtil fileListUtil = new FileListUtil();
+//        try {
+//            fileListUtil.FileList("D:\\王涛\\天津一网通办\\公共服务事项编码。", "D:\\log.txt");
+//            list = fileListUtil.getList();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        for (int i = 0; i < list.size(); i++) {
+//            CodingController.readConding(list.get(i));
 //        }
 
-//        for (int i = 0; i < list.size(); i++) {
-////            System.out.println(list.get(i));
-//            try {
-//                boolean b = ExcelController.readExcels(list.get(i));
-//                PrintStream mytxt=new PrintStream("D:\\log.txt");
-//                PrintStream out=System.out;
-//                fileListUtil.OutWrite(list.get(i));
-//                System.setOut(mytxt);
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
+//        FileOutputStream fos1 = new FileOutputStream("D:\\Hello.txt");
+//        FileOutputStream fos2 = new FileOutputStream("D:\\Hello.txt");
+//        OutputStreamWriter osw1 = new OutputStreamWriter(fos1,"UTF-8");
+//        OutputStreamWriter osw2 = new OutputStreamWriter(fos2,"UTF-8");
+//        PrintWriter pw1 = new PrintWriter(osw1);
+//        PrintWriter pw2 = new PrintWriter(osw2);
+//
+//        for (int i = 0; i < 10; i++) {
+//
+//
+//            pw2.println("Hello World");
 //
 //        }
+//        pw2.close();
+//
+//    }
+
+
+        for (int i = 0; i < 50; i++) {
+            System.out.println((int) ((Math.random() * 9 + 1) * 100));
+        }
 
 
     }

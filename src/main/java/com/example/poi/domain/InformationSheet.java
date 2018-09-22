@@ -48,6 +48,7 @@ public class InformationSheet {
     private String applicationConditions;//申请条件
     private String authorityDivision;//权限划分
 
+
     public Integer getId() {
         return id;
     }

@@ -46,6 +46,7 @@ public class ReadExcelUtil {
     private Map<String, Map> readExcel(Workbook wb, int sheetIndex, int startReadLine, int tailLine) {
         Sheet sheet = wb.getSheetAt(sheetIndex);
         Map<String, String> informationName = new HashMap<>();
+        Map<String, String> qu = new HashMap<>();
         Map<String, String> informationMap = new HashMap<>();
         Map<String, List<String>> materialsMap = new HashMap<>();
         Map<String, List<String>> problemMap = new HashMap<>();
@@ -54,6 +55,7 @@ public class ReadExcelUtil {
         int a1 = 0;
         int a2 = 0;
         int a3 = 0;
+
         for(int i=startReadLine; i<sheet.getLastRowNum()-tailLine+1; i++) {
             if (sheet != null){
                 Row row = sheet.getRow(i);
@@ -63,6 +65,7 @@ public class ReadExcelUtil {
                     break;
                 }
                 for(Cell c : row) {
+                    c.setCellType(Cell.CELL_TYPE_STRING);
                     boolean isMerge = isMergedRegion(sheet, i, c.getColumnIndex());
                     //判断是否具有合并单元格
                     if(isMerge) {
@@ -73,13 +76,6 @@ public class ReadExcelUtil {
                             string = str1;
                             list.add(string);
                         }
-//                    if (str1.equals("")) {
-//                        string = str1;
-//                        list.add(string);
-//                    } else if (string!=null && !string.equals(str1)) {
-//                        string = str1;
-//                        list.add(string);
-//                    }
                     }else {
                         String str2 = String.valueOf(c.getRichStringCellValue());
                         list.add(str2);
@@ -121,6 +117,34 @@ public class ReadExcelUtil {
             }
 
         }
+
+        if (informationName.get("information").contains("西青区")){
+            informationName.put("information","西青区");
+        } else if (informationName.get("information").contains("东丽区")) {
+            informationName.put("information","东丽区");
+        } else if (informationName.get("information").contains("北辰区")) {
+            informationName.put("information","北辰区");
+        } else if (informationName.get("information").contains("宝坻区")) {
+            informationName.put("information","宝坻区");
+        } else if (informationName.get("information").contains("津南区")) {
+            informationName.put("information","津南区");
+        } else if (informationName.get("information").contains("静海区")) {
+            informationName.put("information","静海区");
+        } else if (informationName.get("information").contains("宁河区")) {
+            informationName.put("information","宁河区");
+        } else if (informationName.get("information").contains("蓟州区")) {
+            informationName.put("information","蓟州区");
+        } else if (informationName.get("information").contains("河北区")) {
+            informationName.put("information","河北区");
+        } else if (informationName.get("information").contains("南开区")) {
+            informationName.put("information","南开区");
+        } else if (informationName.get("information").contains("河西区")) {
+            informationName.put("information","河西区");
+        } else if (informationName.get("information").contains("和平区")) {
+            informationName.put("information","和平区");
+        }
+
+
         map.put("表名",informationName);
         map.put("基本信息",informationMap);
         map.put("申请材料",materialsMap);
